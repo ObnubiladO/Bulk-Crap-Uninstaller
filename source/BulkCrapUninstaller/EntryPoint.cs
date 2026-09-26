@@ -49,7 +49,6 @@ namespace BulkCrapUninstaller
                 {
                     Application.SetCompatibleTextRenderingDefault(false);
                     Application.EnableVisualStyles();
-                    Theming.ThemeManager.Initialize(args);
 
                     _mutex = new Mutex(true, MUTEX_NAME, out var createdNew);
                     if (!createdNew)
@@ -60,6 +59,7 @@ namespace BulkCrapUninstaller
                     }
 
                     SetupDependancies();
+                    Theming.ThemeManager.Initialize(Properties.Settings.Default.WindowUseDarkMode);
 
                     if(Properties.Settings.Default.WindowDpiAware)
                         Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);

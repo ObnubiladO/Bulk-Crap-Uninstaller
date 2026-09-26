@@ -52,15 +52,12 @@ internal static class ThemeManager
         }
     }
 
-    internal static void Initialize(string[] args)
+    internal static void Initialize(bool useDarkMode)
     {
         if (_initialized) return;
         _initialized = true;
 #if NET10_0_OR_GREATER
-        // Light is also an explicit recovery override if both switches are present.
-        _requested = args.Contains("--dark-mode", StringComparer.OrdinalIgnoreCase)
-                     && !args.Contains("--light-mode", StringComparer.OrdinalIgnoreCase)
-                     && !SystemInformation.HighContrast;
+        _requested = ShouldEnableDarkMode(useDarkMode, SystemInformation.HighContrast);
         Application.SetColorMode(_requested ? SystemColorMode.Dark : SystemColorMode.Classic);
         if (!IsEnabled) return;
         CustomMessageBox.DefaultHeadingColor = SystemColors.WindowText;
@@ -70,6 +67,9 @@ internal static class ThemeManager
         ApplicationListColors.ColorBlind = Adapt(ApplicationListColors.ColorBlind);
 #endif
     }
+
+    internal static bool ShouldEnableDarkMode(bool useDarkMode, bool highContrast)
+        => useDarkMode && !highContrast;
 
     private static Color Tint(Color color)
     {
