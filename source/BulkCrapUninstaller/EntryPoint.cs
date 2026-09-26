@@ -109,8 +109,8 @@ namespace BulkCrapUninstaller
 
                 _mutex.ReleaseMutex();
                 _mutex.Dispose();
-                Process.Start(restartInfo);
                 Application.Exit();
+                Process.Start(restartInfo);
             }
             catch (Exception ex)
             {
