@@ -40,6 +40,24 @@ and the uninstall wizard.
 
 ## Latest validation and its limits
 
+The 2026-09-26 [v6.3 fork-validation pass](NativeDarkMode-ForkValidation.md)
+interactively exercised the current portable package through its production
+managed entry point on Windows 11 build 26100.9457 and .NET Desktop Runtime
+10.0.12. A 503-entry dark inventory covered grouped/ungrouped rendering,
+collapse/expand, sorting, search, checkbox keyboard input, filtered reload, all
+Properties and Settings pages, clean
+close/relaunch and valid portable settings XML. A no-switch launch returned to a
+ready light inventory. The exact executable remains the authority for elevation
+and single-instance behavior; a second managed-host process stayed headless in
+this pass, so exact restart/culture and the combined lifecycle gate remain open.
+The source-side [remaining surface audit](NativeDarkMode-SurfaceAudit.md) found no
+additional native-message or embedded-HTML implementation beyond the existing
+message facade, the intentional light-mode fallback and `FeedbackWindow`. It also
+identified the standard dialogs that still need an interactive dark/contrast
+review. The current command-line environment exposes only the .NET 8.0.425 SDK,
+so the documentation-only updates in this pass did not receive another local
+.NET 10 compilation; the already built v6.3 package supplied the runtime evidence.
+
 After the v6.3 synchronization on 2026-09-08, the .NET 10 application project
 restored and compiled locally with the existing warnings. The updated test project
 compiled and ran 56 tests: 52 passed, one was skipped, and three rating tests could
@@ -161,7 +179,7 @@ all-bad-confidence leftover-filtering issue is separate and unchanged.
    related/running-process branches and direct Settings opening from Progress.
 
 After these investigations, consolidate findings before extending individual
-adapters. The release checklist still contains 31 open checks, many overlapping
+adapters. The release checklist still contains 22 open checks, many overlapping
 validation areas rather than known implementation defects: real startup and
 elevation, packaging/helpers, Windows and DPI coverage, localization/RTL, resource
 stability, and disposable uninstall/backup/cleanup workflows.

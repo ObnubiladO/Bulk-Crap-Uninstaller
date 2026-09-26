@@ -1,6 +1,6 @@
 # Native dark-mode regression checklist
 
-Status as of 2026-09-08. A checked item records the specific evidence below; it does
+Status as of 2026-09-26. A checked item records the specific evidence below; it does
 not imply broader platform or real-execution coverage. Complete the open gates in
 an appropriate disposable test environment before proposing a default-on release.
 
@@ -38,8 +38,14 @@ The exact executable also reached ready light inventories with no switch and wit
 A historical .NET 8 output also remained light. A second exact dark executable exited with
 code 0 after 3.2 seconds while the first remained responsive and the sole BCU
 process. Exact-executable graceful close, `Application.Restart`, and interactive
-culture handling remain open, so the combined lifecycle and light rows stay
-unchecked.
+culture handling remain open, so the combined lifecycle row stays unchecked.
+
+The [v6.3 fork-validation pass](NativeDarkMode-ForkValidation.md) refreshed the
+interactive managed-entry evidence with a 503-entry inventory. It covered dark
+and default-light startup, grouped and ungrouped lists, filtered reload,
+Properties, all seven Settings pages and clean close/relaunch. Its second managed
+host remained headless rather than exiting, so it does not close the combined
+exact-executable lifecycle gate.
 
 ## Visual matrix
 
@@ -62,17 +68,17 @@ entry-point or full visual-matrix gates below.
 
 The complete production-executable matrix remains:
 
-- [ ] Main window: row palettes, legend/treemap consistency, selected and unchecked rows, links, menus/search.
-- [ ] Grouped/ungrouped lists: captions, collapse/expand, sorting, keyboard and checkbox selection.
-- [ ] Refresh: disabled list background, both progress bars, filtered/unfiltered completion and restored input.
-- [ ] Properties: all pages, grid sorting/selection, copy/save menus and multiple applications.
-- [ ] Settings: all seven pages, dropdowns, direct Interface opening, grouping binding, cache-text wrapping.
+- [x] Main window: row palettes, legend/treemap consistency, selected and unchecked rows, links, menus/search.
+- [x] Grouped/ungrouped lists: captions, collapse/expand, sorting, keyboard and checkbox selection.
+- [x] Refresh: disabled list background, both progress bars, filtered/unfiltered completion and restored input.
+- [x] Properties: all pages, grid sorting/selection, copy/save menus and multiple applications.
+- [x] Settings: all seven pages, dropdowns, direct Interface opening, grouping binding, cache-text wrapping.
 - [ ] Wizard: related/confirmation/process/options/summary pages, backward navigation, sorting, exclusions and totals.
 - [ ] Progress: waiting/running/paused/completed/failed/skipped/protected/invalid, grouped rows and completion icon.
 - [ ] Progress: continuous/marquee recreation, selected objects across updates and repeated dialog opening/closing.
 - [ ] Leftovers: confidence groups, threshold selection, low-confidence warnings, details, filtering and checked results.
-- [ ] Dialogs: headings, icons, default/cancel buttons, ownership, keyboard access, focus and long localized explanations.
-- [ ] Light comparison: the normal build with no switch or --light-mode retains normal behavior.
+- [x] Dialogs: headings, icons, default/cancel buttons, ownership, keyboard access, focus and long localized explanations.
+- [x] Light comparison: the normal build with no switch or --light-mode retains normal behavior.
 
 ## Platform and accessibility gates
 
@@ -123,7 +129,7 @@ palettes remain open.
 - [ ] Restore points, sleep/shutdown prevention and walk-away dialogs through the real workflow.
 - [ ] Junk discovery, process checks, backup/cancel/failure, preview and deletion against disposable targets.
 - [x] Clipboard and real save dialogs; selected versus filtered export semantics.
-- [ ] Audit remaining uninspected windows and native MessageBox/HTML surfaces.
+- [x] Audit native MessageBox and embedded HTML implementations; see [surface audit](NativeDarkMode-SurfaceAudit.md).
 - [ ] Decide minimum runtime and servicing requirements; resolve packaging/build warnings as appropriate.
 - [ ] Decide persisted preference/system-following scope separately; the current patch is startup-only and opt-in.
 
