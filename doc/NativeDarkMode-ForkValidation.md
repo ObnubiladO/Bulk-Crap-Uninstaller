@@ -5,6 +5,30 @@ This pass was run on 2026-09-26 against `integration/native-dark` at
 24H2 build 26100.9457 at the existing 200% display configuration, with .NET
 Desktop Runtime 10.0.12.
 
+## Persisted setting and restart follow-up
+
+The current revision replaces the prototype command-line activation with
+**Settings > Interface > Use dark mode (restart required)**. The code at PR commit
+`867e039` was built by
+[fork CI run 36248632055](https://github.com/ObnubiladO/Bulk-Crap-Uninstaller/actions/runs/36248632055)
+on temporary validation commit `0d72482`, which differs only by enabling the CI
+workflow on that branch. Both build/test and native-launcher jobs passed; the
+published artifact is named
+`Bulk-Crap-Uninstaller_0d72482bfa349df967239d0e5681c011ea0488ee`.
+
+The exact portable `BCUninstaller.exe` was exercised at normal integrity for UI
+automation. A light start showed the option clear. Enabling it, closing Settings
+and accepting the restart prompt produced a new process with a dark main window;
+the reopened option was checked and `BCUninstaller.settings` contained
+`WindowUseDarkMode=True`. Clearing it and accepting the next restart produced a
+new light process; the option reopened unchecked and the XML contained
+`WindowUseDarkMode=False`. This validates both persistence directions and the
+repaired app-host/mutex/save ordering. The local application firewall's outbound
+alert did not prevent the offline setting and restart cycle.
+
+The older command-line pass below remains historical evidence for the surfaces it
+covered. Those switches are no longer part of the current implementation.
+
 The interactive run used an isolated copy of the portable package and invoked
 the production managed entry point with `dotnet BCUninstaller.dll --dark-mode`.
 Helper-backed scans were disabled in that copy because the managed process was

@@ -9,16 +9,17 @@ an appropriate disposable test environment before proposing a default-on release
 - [x] Source baseline includes v6.3 and the current upstream master (`30da609`).
 - [x] Unified .NET 10 solution restores and builds with Visual Studio 2026 full MSBuild.
 - [x] The special GUI framework override and separate native-dark output path are removed.
-- [x] .NET 10 runtime checker: no switch leaves adapters disabled.
-- [x] .NET 10 runtime checker: --dark-mode enables adapters.
-- [x] .NET 10 runtime checker: --light-mode overrides --dark-mode.
+- [x] .NET 10 runtime checker: a disabled preference leaves adapters disabled.
+- [x] .NET 10 runtime checker: an enabled preference activates adapters.
+- [x] .NET 10 runtime checker: high contrast suppresses an enabled preference.
+- [x] Exact portable app host: Interface toggle persists and restarts light to dark and dark to light.
 - [x] Repeated initialization/list/image/menu application does not duplicate adaptation.
 - [x] Shared bitmap pixels remain unchanged; real leftover constructor uses the new list and style hook.
 - [x] Progress handle recreation and disposal with a pending callback finish without an exception.
 - [x] Launch the real production entry point through its normal elevation/startup path.
 - [ ] Replay the full visual matrix below against the integrated executable.
 - [ ] Verify packaging includes required runtimes/helpers and preserves installer upgrade behavior.
-- [ ] Validate clean startup, close/restart, existing-instance handling and culture selection.
+- [ ] Validate same-integrity elevated close/restart, existing-instance handling and culture selection as one lifecycle campaign.
 
 The assembly checker runs unelevated with empty/in-memory controls; it invokes no
 production startup, inventory, backup or uninstall workflow. The .NET 10 cases used
@@ -46,6 +47,13 @@ and default-light startup, grouped and ungrouped lists, filtered reload,
 Properties, all seven Settings pages and clean close/relaunch. Its second managed
 host remained headless rather than exiting, so it does not close the combined
 exact-executable lifecycle gate.
+
+On 2026-09-26, the exact portable app host from fork CI run `36248632055` was
+driven at normal integrity. **Settings > Interface > Use dark mode (restart
+required)** persisted `True`, restarted into a new dark process and reopened as
+checked. Clearing it persisted `False`, restarted into a new light process and
+reopened as unchecked. This closes the setting and normal-integrity app-host restart
+path, while the combined elevated lifecycle campaign above remains open.
 
 ## Visual matrix
 
@@ -78,7 +86,7 @@ The complete production-executable matrix remains:
 - [ ] Progress: continuous/marquee recreation, selected objects across updates and repeated dialog opening/closing.
 - [ ] Leftovers: confidence groups, threshold selection, low-confidence warnings, details, filtering and checked results.
 - [x] Dialogs: headings, icons, default/cancel buttons, ownership, keyboard access, focus and long localized explanations.
-- [x] Light comparison: the normal build with no switch or --light-mode retains normal behavior.
+- [x] Light comparison: the normal build with the preference disabled retains normal behavior.
 
 ## Platform and accessibility gates
 
@@ -131,7 +139,7 @@ palettes remain open.
 - [x] Clipboard and real save dialogs; selected versus filtered export semantics.
 - [x] Audit native MessageBox and embedded HTML implementations; see [surface audit](NativeDarkMode-SurfaceAudit.md).
 - [ ] Decide minimum runtime and servicing requirements; resolve packaging/build warnings as appropriate.
-- [ ] Decide persisted preference/system-following scope separately; the current patch is startup-only and opt-in.
+- [x] Persisted opt-in preference is implemented; automatic system-theme following remains outside this patch.
 
 The keyboard-only main-window pass exercised Ctrl+F/F3/Escape search handling,
 list movement and Space checking, the Menu-key context menu, Tab/Shift+Tab, and

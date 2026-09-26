@@ -15,8 +15,9 @@ Read [build instructions and architecture](NativeDarkMode.md), then the
 projects target .NET 10 and use the repository's normal build/output path. Building
 the complete solution requires Visual Studio 2026 full MSBuild with desktop/C++
 tools and the .NET 10 SDK because three projects retain COM references. Launch
-`bin/Release/AnyCPU/BCUninstaller.exe --dark-mode`. No switch means light mode, and
-`--light-mode` overrides `--dark-mode`.
+`bin/Release/AnyCPU/BCUninstaller.exe` normally, then enable **Use dark mode
+(restart required)** under **Settings > Interface**. The persisted option defaults
+to off. Accept the restart prompt to apply either direction.
 
 The executable retains its real elevation and uninstall behavior. The external
 development host used for inspection disconnected execution actions; those
@@ -24,8 +25,9 @@ protections are not part of the application or this PR.
 
 ## Implemented scope
 
-- Native .NET 10 dark-mode opt-in with scoped adapters for inspected main-window,
-  Settings, Properties, wizard, progress and leftover-review controls.
+- Persisted .NET 10 dark-mode opt-in under Settings > Interface, with scoped
+  adapters for inspected main-window, Settings, Properties, wizard, progress and
+  leftover-review controls.
 - List headers/group captions, status rows, selection/link colors, monochrome
   icons, search fields/dropdowns, legend/treemap and progress lifecycle handling.
 - Live high-contrast entry/recovery fixes, including main-window buttons and
@@ -40,6 +42,20 @@ and the uninstall wizard.
 
 ## Latest validation and its limits
 
+The current setting/restart revision was built by
+[fork CI run 36248632055](https://github.com/ObnubiladO/Bulk-Crap-Uninstaller/actions/runs/36248632055)
+at `0d72482`; its application code matches PR commit `867e039` and differs only in
+the temporary workflow branch trigger. Both the solution build/test job and native
+launcher job passed. The published portable artifact was then exercised through
+the exact `BCUninstaller.exe` app host at normal integrity so the UI automation
+helper could drive it. Starting in light mode, the Interface checkbox was enabled,
+the restart prompt accepted, and a new process opened with the dark interface. The
+reopened setting remained checked and the portable XML contained
+`WindowUseDarkMode=True`. The option was then cleared; the next restart opened a
+new light process, the reopened checkbox remained clear, and the XML contained
+`WindowUseDarkMode=False`. This cycle also verified that settings finish saving and
+the single-instance mutex is released before the replacement process starts.
+
 The 2026-09-26 [v6.3 fork-validation pass](NativeDarkMode-ForkValidation.md)
 interactively exercised the current portable package through its production
 managed entry point on Windows 11 build 26100.9457 and .NET Desktop Runtime
@@ -49,7 +65,9 @@ Properties and Settings pages, clean
 close/relaunch and valid portable settings XML. A no-switch launch returned to a
 ready light inventory. The exact executable remains the authority for elevation
 and single-instance behavior; a second managed-host process stayed headless in
-this pass, so exact restart/culture and the combined lifecycle gate remain open.
+this older pass. The later setting cycle covers exact app-host restart at normal
+integrity, while a combined same-integrity elevated restart/culture campaign remains
+open.
 The source-side [remaining surface audit](NativeDarkMode-SurfaceAudit.md) found no
 additional native-message or embedded-HTML implementation beyond the existing
 message facade, the intentional light-mode fallback and `FeedbackWindow`. It also
@@ -174,16 +192,16 @@ all-bad-confidence leftover-filtering issue is separate and unchanged.
      reported stale search focus after some transfers. A real screen-reader
      announcement pass remains open.
 
-4. Next target: repeat the managed UI campaign from a same-integrity production
-   executable, including exact restart/culture handling, then cover the wizard's
-   related/running-process branches and direct Settings opening from Progress.
+4. Next target: repeat the UI campaign from a same-integrity elevated production
+   executable, including culture handling, then cover the wizard's related/running-
+   process branches and direct Settings opening from Progress.
 
 After these investigations, consolidate findings before extending individual
-adapters. The release checklist still contains 22 open checks, many overlapping
+adapters. The release checklist still contains 21 open checks, many overlapping
 validation areas rather than known implementation defects: real startup and
 elevation, packaging/helpers, Windows and DPI coverage, localization/RTL, resource
 stability, and disposable uninstall/backup/cleanup workflows.
 
-Persisted preference, automatic system-theme following, runtime migration and
-default-on rollout remain design decisions. This draft is not ready to merge as
-a release feature.
+The persisted opt-in preference is implemented. Automatic system-theme following
+and default-on rollout remain design decisions. This draft is not ready to merge
+as a release feature.

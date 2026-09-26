@@ -2,7 +2,8 @@
 
 This patch consolidates the Windows Forms adapters investigated against BCU's real
 main window, Properties, Settings, uninstall wizard, progress and leftover review.
-Dark mode remains an opt-in launch mode, while the solution now targets .NET 10.
+Dark mode remains opt-in through the Interface settings, while the solution now
+targets .NET 10.
 
 For the current status, evidence limitations and next investigations, see the
 [WIP continuation guide](NativeDarkMode-Handoff.md).
@@ -18,11 +19,13 @@ the .NET 10 SDK. Use the repository's normal build path:
 msbuild source/BulkCrapUninstaller.sln /restore /t:Build /p:Configuration=Release /p:Platform="Any CPU"
 ```
 
-Launch the executable with `--dark-mode` to activate the adapters. With no
-switch it stays light. `--light-mode` takes precedence if both are present. The
-comparison is case-insensitive. No theme setting is persisted, and there is no live
-light/dark switching or automatic system-theme following in this patch. Scoped
-monochrome icons now follow high-contrast colors, including changes while open.
+Launch the executable normally, open **Settings > Interface**, and select
+**Use dark mode (restart required)**. The setting is disabled by default, is saved
+in BCU's existing portable settings file, and takes effect after accepting the
+restart prompt. Clearing it and restarting returns to the normal light interface.
+High contrast suppresses dark mode even when the preference is enabled. There is
+no live light/dark switching or automatic system-theme following in this patch.
+Scoped monochrome icons follow high-contrast colors, including changes while open.
 
 The existing manifest, elevation requirements, single-instance mutex, application
 settings, startup checks, scanning and uninstall/cleanup behavior remain intact.
@@ -32,8 +35,9 @@ the earlier inspection harness's disconnected actions as properties of this buil
 ## Code organization
 
 `Theming/ThemeManager.cs` is the entry point. Initialization runs once after the
-entry point initializes text rendering and visual styles, before dependency setup
-can display application windows. It sets the launch mode, optional shared-dialog
+entry point prepares application settings, text rendering and visual styles, before
+dependency setup can display application windows. It reads the persisted preference,
+sets the launch mode, optional shared-dialog
 heading color and the two existing application-row palettes. High contrast prevents
 initial opt-in; dark control adapters also check high contrast before applying.
 The separate icon bindings remain active in high contrast, including classic mode.
