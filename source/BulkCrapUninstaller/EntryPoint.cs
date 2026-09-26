@@ -93,10 +93,23 @@ namespace BulkCrapUninstaller
         {
             try
             {
+                var assemblyPath = Assembly.GetAssembly(typeof(EntryPoint))!.Location;
+                var executablePath = Path.ChangeExtension(assemblyPath, ".exe");
+                var restartInfo = new ProcessStartInfo
+                {
+                    FileName = executablePath,
+                    WorkingDirectory = Program.AssemblyLocation.FullName,
+                    UseShellExecute = false
+                };
+
+                foreach (var argument in Environment.GetCommandLineArgs().Skip(1))
+                    restartInfo.ArgumentList.Add(argument);
+
                 IsRestarting = true;
 
                 _mutex.ReleaseMutex();
-                Application.Restart();
+                Process.Start(restartInfo);
+                Application.Exit();
             }
             catch (Exception ex)
             {
