@@ -108,6 +108,7 @@ namespace BulkCrapUninstaller
                 IsRestarting = true;
 
                 _mutex.ReleaseMutex();
+                _mutex.Dispose();
                 Process.Start(restartInfo);
                 Application.Exit();
             }
