@@ -9,6 +9,7 @@ an appropriate disposable test environment before proposing a default-on release
 - [x] Source baseline includes v6.3 and the current upstream master (`30da609`).
 - [x] Unified .NET 10 solution restores and builds with Visual Studio 2026 full MSBuild.
 - [x] The special GUI framework override and separate native-dark output path are removed.
+- [x] Light installer consumes the .NET 10 AnyCPU publish directory and bootstraps the .NET 10.0.12 Desktop Runtime; Inno Setup 6.4.3 compiles it successfully.
 - [x] .NET 10 runtime checker: a disabled preference leaves adapters disabled.
 - [x] .NET 10 runtime checker: an enabled preference activates adapters.
 - [x] .NET 10 runtime checker: high contrast suppresses an enabled preference.

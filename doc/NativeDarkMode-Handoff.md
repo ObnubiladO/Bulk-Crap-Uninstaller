@@ -56,6 +56,14 @@ new light process, the reopened checkbox remained clear, and the XML contained
 `WindowUseDarkMode=False`. This cycle also verified that settings finish saving and
 the single-instance mutex is released before the replacement process starts.
 
+The light installer now consumes `publish-AnyCPU-net10.0` and registers a checked
+.NET Desktop Runtime 10.0.12 dependency instead of the old .NET 8 runtime. The
+x86/x64 installers were verified against Microsoft's release-metadata SHA-512
+values, and their SHA-256 values are enforced by the existing Inno download helper.
+Inno Setup 6.4.3 compiled a clean installer from the untouched fork-CI artifact.
+A clean-machine runtime download/install and installer-upgrade replay remain part
+of the broader packaging gate.
+
 The 2026-09-26 [v6.3 fork-validation pass](NativeDarkMode-ForkValidation.md)
 interactively exercised the current portable package through its production
 managed entry point on Windows 11 build 26100.9457 and .NET Desktop Runtime
