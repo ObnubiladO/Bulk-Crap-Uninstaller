@@ -100,6 +100,16 @@ selection, and each modal progress bar's determinate/marquee/determinate cycle.
 It uses disposable files and never invokes deletion. Local build/check logs and
 the patched portable package are ignored under `artifacts/screenshot-fix`.
 
+The subsequent [full fork CI run 37516481604](https://github.com/ObnubiladO/Bulk-Crap-Uninstaller/actions/runs/37516481604)
+rebuilt/published the solution, passed the native launcher build, and passed the
+included checker (15 dark and 13 light checks). Its commit `533c23c` differs from
+application/helper source `b4805b4` only in the temporary validation workflow.
+The normal Test step returned success but produced no TRX, so no full-suite count
+is claimed. The clean CI portable package is published as an
+[unofficial testing prerelease](https://github.com/ObnubiladO/Bulk-Crap-Uninstaller/releases/tag/native-dark-test-2026-10-06-b4805b4),
+with `TESTING.txt` and a SHA-256 checksum. It supersedes the earlier CI download in
+PR #1000. No installer was rebuilt for this publication.
+
 The 2026-09-26 [v6.3 fork-validation pass](NativeDarkMode-ForkValidation.md)
 interactively exercised the current portable package through its production
 managed entry point on Windows 11 build 26100.9457 and .NET Desktop Runtime
