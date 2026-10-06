@@ -64,6 +64,42 @@ Inno Setup 6.4.3 compiled a clean installer from the untouched fork-CI artifact.
 A clean-machine runtime download/install and installer-upgrade replay remain part
 of the broader packaging gate.
 
+### 2026-10-06 file deletion and scan progress repair
+
+The reported light `Delete` window is UniversalUninstaller, a separate process.
+BCU now passes its active dark theme only when launching that exact bundled helper
+for a SimpleDelete entry. The helper initializes WinForms color mode before
+creating its window, adapts its list/header/tooltips and reuses BCU's owned-image
+and contrast adapters. No theme switch is persisted in uninstall commands; the
+main application's Settings option remains the user-facing control. High contrast
+suppresses the dark request.
+
+The empty file tree in the same screenshot was a .NET compatibility defect:
+ObjectListView looked up the old `virtualListSize` private field. It now recognizes
+the current `_virtualListSize` name and falls back to the supported property setter
+if neither exists. This restores actual native row counts, expansion and checked
+selection. The progress lifecycle adapter now lives in KlocTools and attaches to
+both bars in every LoadingDialog, including modal directory scans. Attachment is
+idempotent, so the existing main-inventory adapter call remains safe.
+
+Fresh BCU and UniversalUninstaller builds passed using the local .NET 10.0.400
+SDK. Local compilation substituted the previous clean CI package's
+`Interop.Scripting.dll` for COM-reference generation, using an ignored targets
+file; this is focused managed-build evidence, not a fresh complete solution or
+installer build. Existing warnings remain. On Windows 11 with Desktop Runtime
+10.0.12 at 200% DPI, visual inspection confirmed dark helper rows/icons/buttons,
+blue scan progress after style changes, and the normal light helper/progress
+appearance. Both launches through the real `RunUninstaller` path were canceled
+without deleting fixture files. The controlled app-host launch used
+`RunAsInvoker`; elevated interaction and other display/Windows coverage remain open.
+
+The included [focused regression checker](../validation/NativeDarkHelperCheck/README.md)
+passed 16 checks in dark mode and 14 in light mode, including the optional helper
+launch/cancellation. It checks native virtual row counts and recreation, checked
+selection, and each modal progress bar's determinate/marquee/determinate cycle.
+It uses disposable files and never invokes deletion. Local build/check logs and
+the patched portable package are ignored under `artifacts/screenshot-fix`.
+
 The 2026-09-26 [v6.3 fork-validation pass](NativeDarkMode-ForkValidation.md)
 interactively exercised the current portable package through its production
 managed entry point on Windows 11 build 26100.9457 and .NET Desktop Runtime
@@ -167,9 +203,10 @@ The external prototype harnesses, raw logs, inventory screenshots and local
 `artifacts/` directories mentioned in the follow-up documents are not included
 in this PR. Those references describe historical evidence, not files available
 in this checkout. The focused repair checker is also a local ignored artifact.
-The build helper and implementation are included; the automated assertion counts
+The build helper and implementation are included; those historical assertion counts
 cannot currently be reproduced from this checkout alone.
-Making an isolated, portable regression harness is therefore a useful review task.
+The new file-deletion/loading checker above is included, but does not reproduce
+those broader historical campaigns.
 
 Existing build warnings NU1510 and SYSLIB0057 remain unresolved. The documented
 all-bad-confidence leftover-filtering issue is separate and unchanged.
